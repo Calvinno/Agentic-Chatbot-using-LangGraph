@@ -110,10 +110,10 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
-          LANGSMITH_TRACING: ${{ secrets.LANGSMITH_TRACING }}
+          LANGCHAIN_TRACING_V2: ${{ secrets.LANGCHAIN_TRACING_V2 }}
           LANGSMITH_ENDPOINT: ${{ secrets.LANGSMITH_ENDPOINT }}
-          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
-          LANGSMITH_PROJECT: ${{ secrets.LANGSMITH_PROJECT }}
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_PROJECT: ${{ secrets.LANGCHAIN_PROJECT }}
         run: |
           if [ -z "$GOOGLE_API_KEY" ]; then
             echo "GOOGLE_API_KEY secret is missing."
@@ -130,8 +130,8 @@ jobs:
             exit 1
           fi
 
-          if [ -z "$LANGSMITH_TRACING" ]; then
-            echo "LANGSMITH_TRACING secret is missing."
+          if [ -z "$LANGCHAIN_TRACING_V2" ]; then
+            echo "LANGCHAIN_TRACING_V2 secret is missing."
             exit 1
           fi
 
@@ -140,27 +140,19 @@ jobs:
             exit 1
           fi
 
-          if [ -z "$LANGSMITH_API_KEY" ]; then
-            echo "LANGSMITH_API_KEY secret is missing."
+          if [ -z "$LANGCHAIN_API_KEY" ]; then
+            echo "LANGCHAIN_API_KEY secret is missing."
             exit 1
           fi
 
-          if [ -z "$LANGSMITH_PROJECT" ]; then
-            echo "LANGSMITH_PROJECT secret is missing."
+          if [ -z "$LANGCHAIN_PROJECT" ]; then
+            echo "LANGCHAIN_PROJECT secret is missing."
             exit 1
           fi
 
           echo "All required application secrets are configured."
 
-      - name: Pull latest Docker image
-        env:
-          IMAGE_PATH: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
-        run: |
-          docker pull "${IMAGE_PATH}:main"
-
-      - name: Stop and remove existing container
-        run: |
-          docker rm -f stapp 2>/dev/null || true
+# ...existing code...
 
       - name: Run Streamlit container
         env:
@@ -170,10 +162,10 @@ jobs:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
 
-          LANGSMITH_TRACING: ${{ secrets.LANGSMITH_TRACING }}
+          LANGCHAIN_TRACING_V2: ${{ secrets.LANGCHAIN_TRACING_V2 }}
           LANGSMITH_ENDPOINT: ${{ secrets.LANGSMITH_ENDPOINT }}
-          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
-          LANGSMITH_PROJECT: ${{ secrets.LANGSMITH_PROJECT }}
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_PROJECT: ${{ secrets.LANGCHAIN_PROJECT }}
 
         run: |
           docker run -d \
@@ -184,10 +176,10 @@ jobs:
             -e GOOGLE_API_KEY \
             -e TAVILY_API_KEY \
             -e OPENWEATHER_API_KEY \
-            -e LANGSMITH_TRACING \
+            -e LANGCHAIN_TRACING_V2 \
             -e LANGSMITH_ENDPOINT \
-            -e LANGSMITH_API_KEY \
-            -e LANGSMITH_PROJECT \
+            -e LANGCHAIN_API_KEY \
+            -e LANGCHAIN_PROJECT \
             "${IMAGE_PATH}:main"
 
       - name: Verify container is running
